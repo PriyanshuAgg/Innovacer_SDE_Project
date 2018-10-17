@@ -2,6 +2,8 @@
 
 ## Functionality
 
+
+
 ## Enviornment
 
 1. Node.js
@@ -9,3 +11,6 @@
 
 ## Libraries Used
 
+1. Express
+2. Mongoose
+3. Request

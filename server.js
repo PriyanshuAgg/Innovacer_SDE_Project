@@ -10,7 +10,7 @@ var crypto = require('crypto'),
     mongoose    = require("mongoose"),
     _ = require("underscore");
 
-const scrapedData = require('./app.js');  //invoking app.js file which is giving us some data after scrapping through web
+const scrapedData = require('./scrape.js');  //invoking app.js file which is giving us some data after scrapping through web
 
 
 app.use(bodyParser.urlencoded({extended: true}));
