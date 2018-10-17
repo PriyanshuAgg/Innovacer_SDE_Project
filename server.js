@@ -94,53 +94,59 @@ app.post("/search", function(req, res){   //receive information from form submis
 app.get("/results", (req, res) => {  //now finally send treatment options data we are getting after scrapping to output.ejs file
   //console.log(req.query.issue)
   Issue.find({name:req.query.issue},function(err, allIssues){
-       if(err || allIssues.length === 0)
+       if(err)
        {
            console.log(err);
-           res.render("output",{treatments:allIssues[0].treatment});
        } 
        else 
        {
-          scrapedData(req.query.issue, (data) => {
-            var issue = req.query.issue;
-            if(!_.isEmpty(data))  //if we are getting data after scrapping 
-            {
-              //console.log("true");
-              var newIssue = {name:issue, treatment: data};
-              Issue.create(newIssue, function(err, newlyCreated) //putting dta in dtabase collection
+          if(allIssues.length!=0)
+          {
+            res.render("output",{treatments:allIssues[0].treatment});
+          }
+          else
+          {
+            scrapedData(req.query.issue, (data) => {
+              var issue = req.query.issue;
+              if(!_.isEmpty(data))  //if we are getting data after scrapping 
               {
-                  if(err)
-                  {
-                    console.log(err);
-                  } 
-                  else 
-                  {
-                    console.log("Created");
-                  }
-              });
-              res.render("output",{treatments:data});
-            }
-            else //if not getting data from scrpping call issues info api to get treatment options and specialists
-            {
-              var obj = {};
-              var issueid= req.query.issueid;
-              specialisation = req.query.specialisation;
-              //console.log(specialisation);
-              var uri = "https://sandbox-healthservice.priaid.ch/issues/"+issueid+"/info?token="+token+"&language=en-gb";
-              request(uri, function(error, response, body){
-              if(!error && response.statusCode == 200) 
+                //console.log("true");
+                var newIssue = {name:issue, treatment: data};
+                Issue.create(newIssue, function(err, newlyCreated) //putting dta in dtabase collection
                 {
-                  //console.log(body);
-                  desc = JSON.parse(body);
-                  //console.log(desc);
-                  //console.log(desc.TreatmentDescription);
-                  obj["TreatmentDescription"] = desc.TreatmentDescription;
-                  obj["Specialist"] = specialisation;
-                  res.render("output",{treatments:obj});
-                }
-              })
-            }
-          })
+                    if(err)
+                    {
+                      console.log(err);
+                    } 
+                    else 
+                    {
+                      console.log("Created");
+                    }
+                });
+                res.render("output",{treatments:data});
+              }
+              else //if not getting data from scrpping call issues info api to get treatment options and specialists
+              {
+                var obj = {};
+                var issueid= req.query.issueid;
+                specialisation = req.query.specialisation;
+                //console.log(specialisation);
+                var uri = "https://sandbox-healthservice.priaid.ch/issues/"+issueid+"/info?token="+token+"&language=en-gb";
+                request(uri, function(error, response, body){
+                if(!error && response.statusCode == 200) 
+                  {
+                    //console.log(body);
+                    desc = JSON.parse(body);
+                    //console.log(desc);
+                    //console.log(desc.TreatmentDescription);
+                    obj["TreatmentDescription"] = desc.TreatmentDescription;
+                    obj["Specialist"] = specialisation;
+                    res.render("output",{treatments:obj});
+                  }
+                })
+              }
+            })
+          }
        }
     });
   
