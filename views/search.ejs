@@ -1,0 +1,88 @@
+  <% include partials/header %>
+  <div class="row">
+    <h1 class="text-center jumbotron">Welcome To Symptom Checker Application</h1>
+  </div>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Autocomplete - Multiple values</title>
+  <head>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script></head>
+  <script>
+  $( function() {
+    var availableSymptoms = [];
+    <% for (var i = 0; i < symptoms.length; i++) { %>
+      var  t1= '<%= symptoms[i].Name %>'; 
+      availableSymptoms.push(t1); 
+    <% } %>
+    function split( val ) {
+      return val.split( /,\s*/ );
+    }
+    function extractLast( term ) {
+      return split( term ).pop();
+    }
+ 
+    $( "#tags" )
+      // don't navigate away from the field on tab when selecting an item
+      .on( "keydown", function( event ) {
+        if ( event.keyCode === $.ui.keyCode.TAB &&
+            $( this ).autocomplete( "instance" ).menu.active ) {
+          event.preventDefault();
+        }
+      })
+      .autocomplete({
+        minLength: 0,
+        source: function( request, response ) {
+          // delegate back to autocomplete, but extract the last term
+          response( $.ui.autocomplete.filter(
+            availableSymptoms, extractLast( request.term ) ) );
+        },
+        focus: function() {
+          // prevent value inserted on focus
+          return false;
+        },
+        select: function( event, ui ) {
+          var terms = split( this.value );
+          // remove the current input
+          terms.pop();
+          // add the selected item
+          terms.push( ui.item.value );
+          // add placeholder to get the comma-and-space at the end
+          terms.push( "" );
+          this.value = terms.join( "," );
+          return false;
+        }
+      });
+  } );
+  </script>
+</head>
+<body>
+<div class="ui-widget container " style=" background-color: lightgrey;width: 800px;border: 25px solid grey;padding: 25px;margin: auto;" >
+  <div class="row" style="text-align: center">
+      <p>Fill these details to know about issues related to Your Symptoms :-</p>
+  </div>  
+  <div style="width: 30%; margin: 0px auto;">
+
+    <form action="/search" method="POST">
+                <div class="form-group">Enter Your Gender:</br>
+                    <input type="radio" name="gender" id="gender_Male" value="male" required>Male<br>
+                    <input type="radio" name="gender" id="gender_Female" value="female" required>Female<br>
+                    <input type="radio" name="gender" id="gender_Female" value="other" required>Other<br>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="yob" placeholder="year_of_birth" required>
+                </div>
+                <div class="form-group">
+                    <input id="tags" class="form-control" type="text" name="id" placeholder="Enter Symptoms Here..." required>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block">Submit!</button>
+                </div>
+    </form>
+  </div>
+  <!-- <form method="post">
+
+    <input id="tags" size="50">
+  </form> -->
+</div>
+<% include partials/footer %>

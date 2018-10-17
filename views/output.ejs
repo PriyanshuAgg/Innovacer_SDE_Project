@@ -1,0 +1,13 @@
+<% include partials/header %>
+<h1 class="text-center jumbotron">Treatments Options Could Be Following !!!</h1>
+<div class ="container">
+<ul>
+    <% for( var key in treatments) { %>
+      <li>
+          <strong>
+              <%= key %> : <%= treatments[key] %>
+      </li><br>
+    <% } %>
+</ul>
+</div>
+<% include partials/footer %>

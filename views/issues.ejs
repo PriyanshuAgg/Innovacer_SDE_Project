@@ -1,0 +1,21 @@
+<% include partials/header %>
+<% len_issues = issues.length %>
+<% if(len_issues==0) {%>
+	<div class="container" style="margin-top:15%">
+		<h1 style="text-align:center">SORRY!!</h1><br>
+		<h3 style="text-align:center">No Issues Found For Given Symptoms </h3>
+	</div>
+<% } else{ %>
+	<div class="container" style="margin-top:3%">
+		<h3>According to given Symptoms you may have these issues: </h3>
+		<% issues.forEach(function(issue) { %>
+			 <% var arr = []; %>
+	         	<% issue.Specialisation.forEach(function(iss){ %>
+	         		<% arr.push(iss.Name); %>
+	        	 <% }); %>
+				<li><a href="/results?issue=<%= issue.Issue.IcdName.split(";")[0] %>&issueid=<%= issue.Issue.ID %>&specialisation=<%= arr %>"><%= issue.Issue.Name %></a></li>
+		<% }); %>
+	</div>
+<% } %>
+
+<% include partials/footer %>
