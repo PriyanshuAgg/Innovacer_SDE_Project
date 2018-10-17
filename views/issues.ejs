@@ -13,7 +13,7 @@
 	         	<% issue.Specialisation.forEach(function(iss){ %>
 	         		<% arr.push(iss.Name); %>
 	        	 <% }); %>
-				<li><a href="/results?issue=<%= issue.Issue.IcdName.split(";")[0] %>&issueid=<%= issue.Issue.ID %>&specialisation=<%= arr %>"><%= issue.Issue.Name %></a></li>
+				<li><a href="/results?issue=<%= issue.Issue.ProfName %>&issueid=<%= issue.Issue.ID %>&specialisation=<%= arr %>"><%= issue.Issue.Name %></a></li>
 		<% }); %>
 	</div>
 <% } %>
